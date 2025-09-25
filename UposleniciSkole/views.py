@@ -28,7 +28,7 @@ def lista_objekata(request, tip):
     for obj in page_obj:
         vrijednosti.append([getattr(obj, field) for field in varijable if field != "id"])
 
-    return render(request, "UposleniciSkole/lista_objekata.html", {
+    return render(request, "UposleniciSkole/lista_uposlenika.html", {
         "tip": tip,
         "varijable": [field for field in varijable if field != "id"], 
         "vrijednosti": vrijednosti,
