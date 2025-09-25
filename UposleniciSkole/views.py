@@ -1,46 +1,42 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Uposlenik
-from .forms import UposlenikForm
 from django.core.paginator import Paginator
+from .models import Uposlenik, Ucenik
+from .forms import UposlenikForm
+
+
+def lista_objekata(request, tip):
+    if tip == "uposlenici":
+        model = Uposlenik
+        delete_url = "obrisi_uposlenika"
+    elif tip == "ucenici":
+        model = Ucenik
+        delete_url = None   # za sad nemamo obrisi_ucenika
+    else:
+        return render(request, "404.html")
 
 
 
-
-# Create your views here.
-
-'''
-Funkcija:
-
-Uzmi sve modele.
-Procesiraj onaj model koji je user zatrazio, modeli mogu biti uposlenik ili ucenik
-Uzmi iz modela sva imena varijabli
-To saljes na frontend (imena kolona)
-Uzmi iz modela vrijednosti iz tih varijabli
-Saljes i to, loadas na frontendu
-
-'''
-
-
-
-
-
-def lista_uposlenika(request):
-    uposlenici = Uposlenik.objects.all().order_by("id")
-    paginator = Paginator(uposlenici, 10)  
+    queryset = model.objects.all().order_by("id")
+    paginator = Paginator(queryset, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    return render(request, "radnici/lista_uposlenika.html", {"page_obj": page_obj})      # Ako ne bude funkcionisalo, requesta stavi templates
+
+    
+    varijable = [field.name for field in model._meta.get_fields()]
+
+    vrijednosti = []
+    for obj in page_obj:
+        vrijednosti.append([getattr(obj, field) for field in varijable if field != "id"])
+
+    return render(request, "UposleniciSkole/lista_objekata.html", {
+        "tip": tip,
+        "varijable": [field for field in varijable if field != "id"], 
+        "vrijednosti": vrijednosti,
+        "page_obj": page_obj,
+        "delete_url": delete_url,
+    })
 
 
-
-'''
-Dodaj objekat:
-
-1.Koji model se dodaje
-2. Uzmi formu u zavisnosti od tog modela, napravi slobodno 2 forme za uposlenika i za ucenika.
-3. Redirectaj usera nazad na tabelu, za sad ga vrati na bilo koji model
-
-'''
 
 def dodaj_uposlenika(request):
     if request.method == "POST":
@@ -50,14 +46,9 @@ def dodaj_uposlenika(request):
             return redirect("lista_uposlenika")
     else:
         form = UposlenikForm()
-    return render(request, "radnici/dodaj_uposlenika.html", {"form": form})
+    return render(request, "UposleniciSkole/dodaj_uposlenika.html", {"form": form})
 
 
-'''
-Ista logika kao za dodavanje.
-Pitaj koji model se brise, uzmi id modela, izbrisi.
-
-'''
 
 def obrisi_uposlenika(request, pk):
     uposlenik = get_object_or_404(Uposlenik, pk=pk)

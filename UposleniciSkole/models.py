@@ -14,7 +14,7 @@ class Uposlenik(models.Model):
     
 
 
-    class Ucenici(models.Model):
+    class Ucenik(models.Model):
         ime = models.CharField(max_length = 100)
         prezime = models.CharField(max_length = 100)
         godiste = models.IntegerField()
