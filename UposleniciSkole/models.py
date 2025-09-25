@@ -10,4 +10,17 @@ class Uposlenik(models.Model):
     pravo_na_godisnji = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.ime} {self.prezime}"
+        return f"{self.ime} {self.prezime}"   
+    
+
+
+    class Ucenici(models.Model):
+        ime = models.CharField(max_length = 100)
+        prezime = models.CharField(max_length = 100)
+        godiste = models.IntegerField()
+
+        def __str__(self):
+            return f"{self.ime} {self.prezime}"
+        
+
+
