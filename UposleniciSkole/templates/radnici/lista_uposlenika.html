@@ -16,26 +16,26 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Id</th>
-            <th>Ime</th>
-            <th>Prezime</th>
-            <th>Pozicija</th>
-            <th>Godine rada</th>
-            <th>Pravo na godišnji</th>
-            <th>Actions</th>
+          {% for varijabla in varijable %}
+          <th>{{ varijabla }}</th>
+        {% endfor %}
         </tr>
     </thead>    
     <tbody>
-        {% for u in page_obj %}
-        <tr>
-            <td>{{ u.id }}</td>
-            <td>{{ u.ime }}</td>
-            <td>{{ u.prezime }}</td>
-            <td>{{ u.pozicija }}</td>
-            <td>{{ u.godine_rada }}</td>
-            <td>{{ u.pravo_na_godisnji }}</td>
+      {% for red in vrijednosti %}
+            <tr>
+                {% for vrijednost in red %}
+                    <td>{{ vrijednost }}</td>
+                {% endfor %}
+                {% if delete_url %}
+
+
+        
+              <tr>
+          <td> {{ vrijednost }}</td>
             <td>
-                <a href="{% url 'obrisi_uposlenika' u.id %}" class="btn btn-danger btn-sm">Delete</a>
+                <a href="{% url delete_url page_obj.object_list.forloop.counter0.id %}" 
+                           class="btn btn-danger btn-sm">Delete</a>
             </td>
         </tr>
         {% endfor %}
