@@ -27,21 +27,13 @@
                 {% for vrijednost in red %}
                     <td>{{ vrijednost }}</td>
                 {% endfor %}
-                {% if delete_url %}
-
-
-        
-              <tr>
-          <td> {{ vrijednost }}</td>
-            <td>
-                <a href="{% url delete_url page_obj.object_list.forloop.counter0.id %}" 
-                           class="btn btn-danger btn-sm">Delete</a>
-            </td>
-        </tr>
+            </tr>
         {% endfor %}
     </tbody>
 </table>
 
+
+<!-- Imo si ovdje negdje {procenat endfor procenat} viska, error je stvaralo -->
 
 
 
