@@ -28,7 +28,12 @@ def lista_objekata(request, tip):
     for obj in page_obj:
         vrijednosti.append([getattr(obj, field) for field in varijable if field != "id"])
 
-    return render(request, "UposleniciSkole/lista_uposlenika.html", {
+
+    # ovdje je bug. Iz pogresnog foldera isprobavas dobiti lista_uposlenika.html. 
+    # ne moras specifirati ime aplikacije, ono odmah zna gdje treba gledati
+    # ti si pisao UposleniciSkole/lista_uposlenika.html , html ti se nalazi u folderu radnici
+    
+    return render(request, "radnici/lista_uposlenika.html", {
         "tip": tip,
         "varijable": [field for field in varijable if field != "id"], 
         "vrijednosti": vrijednosti,
@@ -46,7 +51,7 @@ def dodaj_uposlenika(request):
             return redirect("lista_uposlenika")
     else:
         form = UposlenikForm()
-    return render(request, "UposleniciSkole/dodaj_uposlenika.html", {"form": form})
+    return render(request, "radnici/dodaj_uposlenika.html", {"form": form})
 
 
 
