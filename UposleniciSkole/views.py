@@ -2,15 +2,19 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from .models import Uposlenik, Ucenik
 from .forms import UposlenikForm
+from .forms import UcenikForm    # Ovdje sam stavio ovu liniju, promjeni ako zapne kod
 
 
 def lista_objekata(request, tip):
     if tip == "uposlenici":
         model = Uposlenik
         delete_url = "obrisi_uposlenika"
+        template = "radnici/lista_uposlenika.html"
     elif tip == "ucenici":
         model = Ucenik
         delete_url = None   # za sad nemamo obrisi_ucenika
+        template = "radnici/lista_ucenika.html"
+
     else:
         return render(request, "404.html")
 
@@ -33,7 +37,7 @@ def lista_objekata(request, tip):
     # ne moras specifirati ime aplikacije, ono odmah zna gdje treba gledati
     # ti si pisao UposleniciSkole/lista_uposlenika.html , html ti se nalazi u folderu radnici
     
-    return render(request, "radnici/lista_uposlenika.html", {
+    return render(request,template, {
         "tip": tip,
         "varijable": [field for field in varijable if field != "id"], 
         "vrijednosti": vrijednosti,
@@ -59,3 +63,24 @@ def obrisi_uposlenika(request, pk):
     uposlenik = get_object_or_404(Uposlenik, pk=pk)
     uposlenik.delete()
     return redirect("lista_uposlenika")
+
+
+
+
+
+
+def dodaj_ucenika(request):
+    if request.method == "POST":
+        form = UcenikForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("lista_ucenika")
+    else:
+        form = UcenikForm()
+    return render(request, "radnici/dodaj_ucenika.html", {"form": form})
+
+
+
+
+
+
